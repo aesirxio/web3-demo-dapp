@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@shared_components/*": ["../shared/components/*"],
+      "@public/*": ["public/*"],
+      "@styles/*": ["../shared/styles/*"],
+      "@utils/*": ["../shared/utils/*"],
+      "@hook/*": ["../shared/hook/*"],
+      "@shared_lang/*": ["../shared/lang/*"],
+      "@lang/*": ["public/lang/*"],
+      "@shared_auth/*": ["../shared/auth/*"]
+    }
+  }
+}

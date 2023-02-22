@@ -1,0 +1,9 @@
+@import "@styles/_bootstrap";
+
+.breadcrumb-items{
+    transition: all 0.3s ease;
+    &:hover{
+        color: $success;
+        transition: all 0.3s ease;
+    }
+}
