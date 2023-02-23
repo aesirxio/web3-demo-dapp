@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import "@styles/App.scss";
 import "@styles/_custom.scss";
-import "../styles/App.scss";
+
 import useTrans from "@hook/useTrans";
 import en from "@lang/en";
 import vi from "@lang/vi";
