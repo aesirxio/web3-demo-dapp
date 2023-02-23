@@ -1,11 +1,10 @@
 import { detectConcordiumProvider } from "@concordium/browser-wallet-api-helpers";
 import {
   deserializeReceiveReturnValue,
-  toBuffer,
   SchemaVersion,
   AccountTransactionType,
   CcdAmount,
-} from "@concordium/web-sdk";
+} from "@concordium/common-sdk";
 
 export default class Concordium {
   client = null;
@@ -64,10 +63,7 @@ export default class Concordium {
   }
 
   async getNextNFT() {
-    return String(Object.keys(await this.listNFTs()).length + 1).padStart(
-      8,
-      "0"
-    );
+    return String(Object.keys(await this.listNFTs()).length + 1).padStart(8, "0");
   }
 
   async mintNFT(address, token) {
@@ -94,9 +90,14 @@ export default class Concordium {
   }
 
   async signMessage(message) {
-    return toBuffer(
+    console.log("aa", message, this.client);
+    return this.toBuffer(
       JSON.stringify(await this.client.signMessage(this.account, message)),
       "utf-8"
     ).toString("base64");
+  }
+
+  toBuffer(s) {
+    return Buffer.from(s);
   }
 }

@@ -3,7 +3,6 @@ import Head from "next/head";
 export default function HeadComponent({ isFolder }) {
   return (
     <Head>
-      <script src="https://cdn.sellix.io/static/js/embed.js"></script>
       <link
         rel="apple-touch-icon"
         sizes="180x180"

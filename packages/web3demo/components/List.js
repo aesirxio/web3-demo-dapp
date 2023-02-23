@@ -2,48 +2,13 @@ import Image from "next/image";
 import { Col, Row } from "react-bootstrap";
 import dma_image from "@public/images/aesirx_dma_homepage_open-source_digital_marketing_automation_solution.jpg";
 
-export default function ListComponent() {
-  let productList = [
-    {
-      name: "Aesirx DMA",
-      sku: "001",
-    },
-    {
-      name: "Aesirx DAM",
-      sku: "002",
-    },
-    {
-      name: "Aesirx PIM",
-      sku: "003",
-    },
-    {
-      name: "Aesirx BI",
-      sku: "004",
-    },
-    {
-      name: "Aesirx Analytics",
-      sku: "005",
-    },
-    {
-      name: "Aesirx SSO",
-      sku: "006",
-    },
-    {
-      name: "Aesirx MCMS",
-      sku: "007",
-    },
-    {
-      name: "Aesirx Content",
-      sku: "008",
-    },
-  ];
-
+export default function ListComponent({ products }) {
   return (
     <div className="container sso-demo py-5">
       <h1>My Products</h1>
       <Row className="mt-3 gx-30px">
-        {productList.length ? (
-          productList.map((item, key) => {
+        {products.length ? (
+          products.map((item, key) => {
             return (
               <Col key={key} className="mb-40px" md={6} lg={4}>
                 <div className="blog-item">

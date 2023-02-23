@@ -2,42 +2,37 @@ import ListComponent from "@components/List";
 import { useAuthentication } from "@shared_auth/AuthenticationProvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import Concordium from "../web3/concordium";
-import {
-  deserializeReceiveReturnValue,
-  toBuffer,
-  SchemaVersion,
-  AccountTransactionType,
-  CcdAmount,
-} from "@concordium/web-sdk";
+
+import { Buffer } from "buffer";
+
 export default function Home() {
-  // const { accountAddress } = useAuthentication();
-  // const [products, setProducts] = useState([]);
+  const { accountAddress, provider } = useAuthentication();
+  const [products, setProducts] = useState([]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const concordium = new Concordium();
+  useEffect(() => {
+    (async () => {
+      try {
+        if (accountAddress) {
+          const nonce = (
+            await axios.get(
+              `${process.env.NEXT_PUBLIC_ENDPOINT}/account/v1/${accountAddress}/nonce`
+            )
+          ).data.nonce;
 
-  //       if (accountAddress) {
-  //         const nonce = (
-  //           await axios.get(
-  //             `${process.env.NEXT_PUBLIC_ENDPOINT}/account/v1/${accountAddress}/nonce`
-  //           )
-  //         ).data.nonce;
+          const signedNonce = Buffer.from(
+            JSON.stringify(await provider.signMessage(accountAddress, String(nonce))),
+            "utf-8"
+          ).toString("base64");
 
-  //         const signedNonce = await concordium.signMessage(String(nonce));
-  //         const products = await axios.get(
-  //           `${process.env.NEXT_PUBLIC_ENDPOINT}/account/v1/${accountAddress}?signature=${signedNonce}`
-  //         );
+          const products = await axios.get(
+            `${process.env.NEXT_PUBLIC_ENDPOINT}/product/v1/${accountAddress}?signature=${signedNonce}`
+          );
 
-  //         setProducts(products);
-  //       }
-  //     } catch (error) {}
-  //   })();
-  // }, [accountAddress]);
+          setProducts(products);
+        }
+      } catch (error) {}
+    })();
+  }, [accountAddress, provider]);
 
-  // console.log(products);
-
-  return <ListComponent />;
+  return <ListComponent products={products} />;
 }
