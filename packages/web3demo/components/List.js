@@ -56,7 +56,7 @@ export default function ListComponent() {
                           quality={100}
                           className="rounded-top-4"
                           objectFit="cover"
-                          src={`${process.env.NEXT_PUBLIC_ENDPOINT}/api/${product.main_image}`}
+                          src={`${process.env.NEXT_PUBLIC_ENDPOINT}${product.main_image}`}
                           width={402}
                           height={227}
                           alt="blog image"
