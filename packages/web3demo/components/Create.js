@@ -6,16 +6,21 @@ import {
 } from "@concordium/web-sdk";
 
 import { useAuthentication } from "@shared_auth/AuthenticationProvider";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { Buffer } from "buffer/";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function CreateComponent() {
+  const router = useRouter();
   const { accountAddress, provider } = useAuthentication();
   const [values, setValues] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleAdd = async (event) => {
+    setLoading(true);
+
     const token = await getNextNFT();
     const trx = await mintNFT(accountAddress, token);
 
@@ -33,6 +38,7 @@ export default function CreateComponent() {
       },
     });
 
+    router.push("/");
     event.preventDefault();
   };
 
@@ -131,8 +137,8 @@ export default function CreateComponent() {
             <Form.Control name="image" type="file" onChange={handleChange} />
           </Form.Group>
         </Row>
-        <Button variant="primary" type="button" onClick={handleAdd}>
-          Submit
+        <Button variant="primary" type="button" onClick={handleAdd} disabled={loading}>
+          {loading ? <Spinner /> : "Save"}
         </Button>
       </Form>
     </div>
