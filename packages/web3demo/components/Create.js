@@ -4,16 +4,41 @@ import {
   deserializeReceiveReturnValue,
   SchemaVersion,
 } from "@concordium/web-sdk";
+
 import { useAuthentication } from "@shared_auth/AuthenticationProvider";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Buffer } from "buffer/";
 import axios from "axios";
+import { useState } from "react";
 
 export default function CreateComponent() {
   const { accountAddress, provider } = useAuthentication();
+  const [values, setValues] = useState({});
 
-  const toBuffer = (s, encoding) => {
-    return Buffer.from(s, encoding);
+  const handleAdd = async (event) => {
+    const token = await getNextNFT();
+    const trx = await mintNFT(accountAddress, token);
+
+    const formData = new FormData();
+    formData.append("block", trx);
+    formData.append("token", token);
+    formData.append("name", values.name);
+    formData.append("sku", values.sku);
+    formData.append("description", values.description);
+    formData.append("main_image", values.image);
+
+    await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/product/v1`, formData, {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    });
+
+    event.preventDefault();
+  };
+
+  const handleChange = ({ target }) => {
+    const value = target.type === "file" ? target.files[0] : target.value;
+    setValues({ ...values, ...{ [target.name]: value } });
   };
 
   const listNFTs = async () => {
@@ -29,40 +54,15 @@ export default function CreateComponent() {
       return 0;
     }
 
-    console.log("viewResult", viewResult, process.env.NEXT_PUBLIC_SMARTCONTRACT_RAWSCHEMA);
-
     const returnValue = await deserializeReceiveReturnValue(
-      toBuffer(viewResult.returnValue, "hex"),
-      toBuffer(process.env.NEXT_PUBLIC_SMARTCONTRACT_RAWSCHEMA, "base64"),
+      Buffer.from(viewResult.returnValue, "hex"),
+      Buffer.from(process.env.NEXT_PUBLIC_SMARTCONTRACT_RAWSCHEMA, "base64"),
       process.env.NEXT_PUBLIC_SMARTCONTRACT_NAME,
       "view",
       SchemaVersion.V2
     );
 
     return returnValue.all_tokens;
-  };
-
-  const handleAdd = async (event) => {
-    const token = await getNextNFT();
-    const trx = await mintNFT(accountAddress, token);
-
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_ENDPOINT}/product/v1`,
-      JSON.stringify({
-        sku: "001",
-        name: "lu",
-        description: "yy",
-        block: trx,
-        token: token,
-      }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    event.preventDefault();
   };
 
   const getNextNFT = async () => {
@@ -92,26 +92,6 @@ export default function CreateComponent() {
     );
   };
 
-  // async productAdd(sku, name, description) {
-  //   const token = await this.concordium.getNextNFT();
-  //   const trx = await this.concordium.mintNFT(this.account, token);
-  //   await this.axios.post(
-  //     "http://localhost/product/v1",
-  //     JSON.stringify({
-  //       sku: sku,
-  //       name: name,
-  //       description: description,
-  //       block: trx,
-  //       token: token,
-  //     }),
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   );
-  //   this.productList();
-  // },
   return (
     <div>
       <h1>Create new Product</h1>
@@ -119,30 +99,36 @@ export default function CreateComponent() {
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formGridName">
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter Name" />
+            <Form.Control
+              name="name"
+              type="text"
+              placeholder="Enter Name"
+              onChange={handleChange}
+            />
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridSKU">
             <Form.Label>SKU</Form.Label>
-            <Form.Control type="text" placeholder="SKU" />
+            <Form.Control name="sku" type="text" placeholder="SKU" onChange={handleChange} />
           </Form.Group>
         </Row>
 
-        <Row className="mb-3">
-          <Form.Group as={Col} controlId="formGridToken">
-            <Form.Label>Token</Form.Label>
-            <Form.Control type="text" placeholder="Enter Token" />
-          </Form.Group>
-
-          <Form.Group as={Col} controlId="formGridBlock">
-            <Form.Label>Block</Form.Label>
-            <Form.Control type="text" placeholder="Enter Block" />
-          </Form.Group>
-        </Row>
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formGridDesc">
             <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea" placeholder="Enter Description" />
+            <Form.Control
+              name="description"
+              as="textarea"
+              placeholder="Enter Description"
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Row>
+
+        <Row className="mb-3">
+          <Form.Group as={Col} controlId="formGridDesc">
+            <Form.Label>Image</Form.Label>
+            <Form.Control name="image" type="file" onChange={handleChange} />
           </Form.Group>
         </Row>
         <Button variant="primary" type="button" onClick={handleAdd}>

@@ -12,13 +12,7 @@ const nextConfigDefault = {
   },
   images: {
     minimumCacheTTL: 60,
-    domains: [
-      "backend.dma.aesirx.io",
-      "backend.dev.dma.aesirx.io",
-      "api.aesirx.io",
-      "dev.api.r.redweb.digital",
-      "dev01.aesirx.io",
-    ],
+    domains: ["localhost"],
   },
   experimental: {
     externalDir: true,

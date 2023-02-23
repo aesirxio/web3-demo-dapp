@@ -13,7 +13,8 @@
     "format:write": "lerna run format:write"
   },
   "dependencies": {
-
+    "@concordium/browser-wallet-api-helpers": "^2.2.0",
+    "@concordium/web-sdk": "^3.2.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
@@ -30,7 +31,6 @@
     "html-react-parser": "^3.0.0",
     "lodash": "^4.17.21",
     "next": "12.2.5",
-    "next-auth": "^4.9.0",
     "next-seo": "^5.5.0",
     "nprogress": "^0.2.0",
     "react": "18.2.0",

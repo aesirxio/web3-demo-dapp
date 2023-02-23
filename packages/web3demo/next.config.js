@@ -10,7 +10,6 @@ const withTM = require("next-transpile-modules")([
   "@concordium/common-sdk",
   "@concordium/browser-wallet-api-helpers",
   "@concordium/web-sdk",
-  "@concordium/node-sdk",
 ]);
 
 const nextConfig = {

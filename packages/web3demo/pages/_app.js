@@ -17,6 +17,11 @@ const ScrollTop = dynamic(() => import("@shared_components/ScrollTop"));
 const AuthComponent = dynamic(() => import("@shared_components/AuthComponent"));
 
 import SEO_image from "@public/images/og.jpg";
+
+function SafeHydrate({ children }) {
+  return <div suppressHydrationWarning>{typeof window === "undefined" ? null : children}</div>;
+}
+
 function MyApp({ Component, pageProps: { ...pageProps } }) {
   const trans = useTrans(en, vi);
 
@@ -39,7 +44,9 @@ function MyApp({ Component, pageProps: { ...pageProps } }) {
       <ProgressBar />
       <AuthComponent>
         <Layout pageProps={pageProps?.items} isSignin={true}>
-          <Component {...pageProps} />
+          <SafeHydrate>
+            <Component {...pageProps} />
+          </SafeHydrate>
         </Layout>
       </AuthComponent>
       <ScrollTop />
